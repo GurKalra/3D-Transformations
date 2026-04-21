@@ -1,0 +1,408 @@
+:root {
+    --bg-color: #121212;
+    --surface-color: #1e1e1e;
+    --surface-hover: #2c2c2c;
+    --text-primary: #ffffff;
+    --text-secondary: #b3b3b3;
+    --accent-color: #007acc;
+    --accent-hover: #0098ff;
+    --border-color: #333333;
+    --win-color: #00ff66;
+    --font-family: 'JetBrains Mono', monospace;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: var(--font-family);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* App Layout Grid */
+.app-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto auto auto 1fr auto;
+    grid-template-areas: 
+        "header header"
+        "theory theory"
+        "viewport controls"
+        "viewport management"
+        "matrices matrices";
+    gap: 20px;
+    padding: 20px;
+    min-height: 100vh;
+    box-sizing: border-box;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* Base Panel Style */
+section {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+section:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Header */
+.header {
+    grid-area: header;
+    text-align: center;
+    padding: 15px;
+}
+
+.header h1 {
+    margin: 0 0 10px 0;
+    font-size: 2rem;
+    letter-spacing: 1px;
+}
+
+.header p {
+    margin: 0;
+    color: var(--text-secondary);
+}
+
+/* Theory Section */
+.theory-section {
+    grid-area: theory;
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
+.theory-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    justify-content: flex-start;
+    min-width: 150px;
+}
+
+button {
+    background-color: var(--surface-hover);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 10px 20px;
+    font-family: var(--font-family);
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.1s ease;
+}
+
+button:hover {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+.theory-content {
+    flex-grow: 1;
+    background-color: var(--bg-color);
+    padding: 20px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    min-height: 80px;
+    transition: opacity 0.4s ease;
+}
+
+/* Main Viewport */
+.main-viewport {
+    grid-area: viewport;
+    position: relative;
+    padding: 0;
+    overflow: hidden;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    outline: none;
+}
+
+.coords-overlay {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    z-index: 5;
+    pointer-events: none;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+.reset-overlay {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 5;
+    padding: 5px 15px;
+    font-size: 0.85rem;
+    width: auto !important; /* Force auto width */
+}
+
+.win-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 255, 102, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    z-index: 10;
+    opacity: 1;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.win-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.win-overlay h2 {
+    color: var(--win-color);
+    text-shadow: 0 0 10px rgba(0, 255, 102, 0.5);
+    font-size: 2rem;
+    text-align: center;
+    border: 2px solid var(--win-color);
+    padding: 20px;
+    background-color: var(--bg-color);
+    border-radius: 8px;
+    transform: scale(1);
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Controls Panel */
+.controls-panel {
+    grid-area: controls;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.controls-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.controls-header h3 {
+    margin: 0;
+}
+
+.controls-header button {
+    padding: 5px 15px;
+    font-size: 0.85rem;
+}
+
+.control-group h4 {
+    margin: 0 0 10px 0;
+    color: var(--text-secondary);
+}
+
+.slider-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.slider-row label {
+    width: 80px;
+    font-size: 0.9rem;
+}
+
+input[type=range] {
+    -webkit-appearance: none;
+    width: calc(100% - 90px);
+    background: transparent;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    cursor: pointer;
+    margin-top: -6px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+input[type=range]::-webkit-slider-thumb:hover {
+    background: var(--accent-hover);
+    transform: scale(1.2);
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px;
+    cursor: pointer;
+    background: var(--border-color);
+    border-radius: 2px;
+}
+
+/* Matrix Display Area */
+.matrix-display-area {
+    grid-area: matrices;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 15px;
+}
+
+.matrix-box {
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.matrix-box.initial { grid-column: span 3; }
+.matrix-box.target { grid-column: span 3; }
+.matrix-box.t-mat { grid-column: span 2; }
+.matrix-box.r-mat { grid-column: span 2; }
+.matrix-box.s-mat { grid-column: span 2; }
+
+.composite-box {
+    grid-column: span 6;
+    border-color: var(--accent-color);
+}
+
+.matrix-box h4 {
+    margin: 0 0 5px 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.dynamic-eq {
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+    color: var(--accent-hover);
+    background: rgba(0, 152, 255, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.matrix-table {
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    background-color: var(--surface-color);
+}
+
+.matrix-table td {
+    border: 1px solid var(--border-color);
+    padding: 5px 10px;
+    text-align: right;
+    width: 50px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.matrix-table td.highlight-var {
+    background-color: rgba(0, 255, 102, 0.2);
+    color: var(--win-color);
+    font-weight: bold;
+}
+
+.matrix-table td.highlight {
+    background-color: rgba(0, 122, 204, 0.2);
+    color: #fff;
+}
+
+/* Game Management */
+.game-management {
+    grid-area: management;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.game-management h3 {
+    margin: 0;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.mgmt-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+select {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    font-family: var(--font-family);
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+select:focus, select:hover {
+    border-color: var(--accent-color);
+}
+
+.action-btn {
+    width: 100%;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+    .app-container {
+        grid-template-columns: 1fr;
+        grid-template-areas: 
+            "header"
+            "theory"
+            "viewport"
+            "controls"
+            "matrices"
+            "management";
+    }
+    
+    .main-viewport {
+        min-height: 400px;
+    }
+}

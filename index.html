@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn 3D Transformations</title>
+    
+    <!-- JetBrains Mono Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Three.js (ES Module import map) -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Learn 3D Transformations</h1>
+            <p>A way for you to learn 3D transformations easily</p>
+        </header>
+
+        <!-- Theory Section -->
+        <section class="theory-section">
+            <div class="theory-buttons">
+                <button id="btn-translation" class="theory-btn">Translation</button>
+                <button id="btn-rotation" class="theory-btn">Rotation</button>
+                <button id="btn-scaling" class="theory-btn">Scaling</button>
+            </div>
+            <div id="theory-content" class="theory-content">
+                <!-- Dynamic text populated by JS -->
+                <p>Click a button on the left to learn about that transformation.</p>
+            </div>
+        </section>
+
+        <!-- Main 3D Viewport -->
+        <section class="main-viewport" id="viewport-container">
+            <div id="coords-overlay" class="coords-overlay">
+                X: <span id="coord-x">0.0</span> | Y: <span id="coord-y">0.0</span> | Z: <span id="coord-z">0.0</span>
+            </div>
+            <button id="btn-reset" class="action-btn reset-overlay">Reset</button>
+            <!-- Three.js Canvas will be injected here -->
+            <div id="win-overlay" class="win-overlay hidden">
+                <h2>LEVEL COMPLETED! CLOSEST MATCH SECURED</h2>
+            </div>
+        </section>
+
+        <!-- Controls Panel -->
+        <section class="controls-panel">
+            <div class="controls-header">
+                <h3>Controls</h3>
+            </div>
+            
+            <div class="control-group" id="group-translation">
+                <h4>Translation</h4>
+                <div class="slider-row">
+                    <label for="tx">TX = <span id="val-tx">0.0</span></label>
+                    <input type="range" id="tx" min="-5" max="5" step="0.1" value="0">
+                </div>
+                <div class="slider-row">
+                    <label for="ty">TY = <span id="val-ty">0.0</span></label>
+                    <input type="range" id="ty" min="-5" max="5" step="0.1" value="0">
+                </div>
+                <div class="slider-row">
+                    <label for="tz">TZ = <span id="val-tz">0.0</span></label>
+                    <input type="range" id="tz" min="-5" max="5" step="0.1" value="0">
+                </div>
+            </div>
+
+            <div class="control-group" id="group-rotation">
+                <h4>Rotation</h4>
+                <div class="slider-row">
+                    <label for="rx">RX = <span id="val-rx">0</span>&deg;</label>
+                    <input type="range" id="rx" min="0" max="360" step="1" value="0">
+                </div>
+                <div class="slider-row">
+                    <label for="ry">RY = <span id="val-ry">0</span>&deg;</label>
+                    <input type="range" id="ry" min="0" max="360" step="1" value="0">
+                </div>
+                <div class="slider-row">
+                    <label for="rz">RZ = <span id="val-rz">0</span>&deg;</label>
+                    <input type="range" id="rz" min="0" max="360" step="1" value="0">
+                </div>
+            </div>
+
+            <div class="control-group" id="group-scaling">
+                <h4>Scaling</h4>
+                <div class="slider-row">
+                    <label for="sx">SX = <span id="val-sx">1.0</span></label>
+                    <input type="range" id="sx" min="0.1" max="3" step="0.1" value="1">
+                </div>
+                <div class="slider-row">
+                    <label for="sy">SY = <span id="val-sy">1.0</span></label>
+                    <input type="range" id="sy" min="0.1" max="3" step="0.1" value="1">
+                </div>
+                <div class="slider-row">
+                    <label for="sz">SZ = <span id="val-sz">1.0</span></label>
+                    <input type="range" id="sz" min="0.1" max="3" step="0.1" value="1">
+                </div>
+            </div>
+        </section>
+
+        <!-- Matrix Display Area -->
+        <section class="matrix-display-area">
+            <div class="matrix-box initial">
+                <h4>Initial State</h4>
+                <div class="dynamic-eq"><code>P = Initial Point</code></div>
+                <table id="matrix-initial" class="matrix-table">
+                    <!-- 4x4 Table rows injected by JS -->
+                </table>
+            </div>
+            <div class="matrix-box target">
+                <h4>Target Final State</h4>
+                <div class="dynamic-eq"><code>P' = Target Point</code></div>
+                <table id="matrix-target" class="matrix-table">
+                    <!-- 4x4 Table rows injected by JS -->
+                </table>
+            </div>
+            <div class="matrix-box t-mat">
+                <h4>T Matrix</h4>
+                <div class="dynamic-eq" id="eq-t"><code>T = (0, 0, 0)</code></div>
+                <table id="matrix-t" class="matrix-table"></table>
+            </div>
+            <div class="matrix-box r-mat">
+                <h4>R Matrix</h4>
+                <div class="dynamic-eq" id="eq-r"><code>R = (0&deg;, 0&deg;, 0&deg;)</code></div>
+                <table id="matrix-r" class="matrix-table"></table>
+            </div>
+            <div class="matrix-box s-mat">
+                <h4>S Matrix</h4>
+                <div class="dynamic-eq" id="eq-s"><code>S = (1, 1, 1)</code></div>
+                <table id="matrix-s" class="matrix-table"></table>
+            </div>
+            <div class="matrix-box composite-box">
+                <h4>Composite (T &times; R &times; S)</h4>
+                <div class="dynamic-eq"><code>P' = T &times; R &times; S &times; P</code></div>
+                <table id="matrix-composite" class="matrix-table"></table>
+            </div>
+        </section>
+
+        <!-- Game Management -->
+        <section class="game-management">
+            <h3>Game Options</h3>
+            <div class="mgmt-row">
+                <label for="level-select">Select Level:</label>
+                <select id="level-select">
+                    <option value="1">Level 1: Translation Only</option>
+                    <option value="2">Level 2: Translation & Scaling</option>
+                    <option value="3">Level 3: Rotation Only</option>
+                    <option value="4">Level 4: Full Composite</option>
+                </select>
+            </div>
+            <div class="mgmt-row">
+                <button id="btn-toggle-axes" class="action-btn">Show Local Axes</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Application Script -->
+    <script type="module" src="script.js"></script>
+</body>
+</html>
