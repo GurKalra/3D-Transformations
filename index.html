@@ -1,31 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Learn 3D Transformations — Interactive Explorer</title>
-    <meta name="description" content="Learn 3D transformations interactively with live matrix math, theory cards, and a gamified playground.">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Learn 3D Transformations: An Interactive Explorer</title>
+    <meta
+      name="description"
+      content="Learn 3D transformations interactively with live matrix math, theory cards, and a gamified playground."
+    />
 
     <!-- Google Fonts: Outfit (headings) + JetBrains Mono (code/matrices) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- CSS -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
 
     <!-- Three.js (ES Module import map) -->
     <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-            }
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
         }
+      }
     </script>
-</head>
-<body>
-
+  </head>
+  <body>
     <!-- Scroll Progress Bar -->
     <div id="scroll-progress"></div>
 
@@ -34,212 +39,289 @@
 
     <!-- Fixed Navbar -->
     <nav id="navbar">
-        <div class="nav-brand">3D Transforms</div>
-        <div class="nav-links">
-            <a href="#hero" class="nav-link active" data-section="hero">Home</a>
-            <a href="#theory" class="nav-link" data-section="theory">Theory</a>
-            <a href="#playground" class="nav-link" data-section="playground">Playground</a>
-            <a href="#matrix-math" class="nav-link" data-section="matrix-math">Matrices</a>
-        </div>
+      <div class="nav-brand">3D Transforms</div>
+      <div class="nav-links">
+        <a href="#hero" class="nav-link active" data-section="hero">Home</a>
+        <a href="#theory" class="nav-link" data-section="theory">Theory</a>
+        <a href="#playground" class="nav-link" data-section="playground"
+          >Playground</a
+        >
+        <a href="#matrix-math" class="nav-link" data-section="matrix-math"
+          >Matrices</a
+        >
+      </div>
     </nav>
 
     <!-- ======================== HERO SECTION ======================== -->
     <section id="hero" class="section section-hero">
-        <canvas id="hero-canvas"></canvas>
-        <div class="hero-content">
-            <h1>Learn 3D<br>Transformations</h1>
-            <p class="hero-tagline">Explore translation, rotation, and scaling through interactive visualizations and live matrix math.</p>
-            <div class="scroll-indicator">
-                <span>Scroll to explore</span>
-                <div class="scroll-arrow"></div>
-            </div>
+      <canvas id="hero-canvas"></canvas>
+      <div class="hero-content">
+        <h1>Learn 3D<br />Transformations</h1>
+        <p class="hero-tagline">
+          Explore translation, rotation, and scaling through interactive
+          visualizations and live matrix math.
+        </p>
+        <div class="scroll-indicator">
+          <span>Scroll to explore</span>
+          <div class="scroll-arrow"></div>
         </div>
+      </div>
     </section>
 
     <!-- ======================== THEORY SECTION ======================== -->
     <section id="theory" class="section section-theory">
-        <div class="theory-layout">
-            <!-- Left: Selector buttons -->
-            <div class="theory-selector">
-                <h2 class="section-heading">Theory</h2>
-                <button class="theory-option active" data-type="translation">
-                    <span class="opt-icon">↗</span>
-                    <span class="opt-label">Translation</span>
-                    <span class="opt-teaser">Move objects through 3D space</span>
-                </button>
-                <button class="theory-option" data-type="rotation">
-                    <span class="opt-icon">⟳</span>
-                    <span class="opt-label">Rotation</span>
-                    <span class="opt-teaser">Pivot objects around any axis</span>
-                </button>
-                <button class="theory-option" data-type="scaling">
-                    <span class="opt-icon">⤢</span>
-                    <span class="opt-label">Scaling</span>
-                    <span class="opt-teaser">Resize objects along each axis</span>
-                </button>
-            </div>
-            <!-- Middle: Content display -->
-            <div class="theory-content" id="theory-content">
-                <div class="theory-content-inner" id="theory-content-inner">
-                    <h3 id="theory-title">Translation</h3>
-                    <p id="theory-desc">Translation moves an object in 3D space along the X, Y, or Z axes without altering its rotation or size.</p>
-                    <div class="card-equation" id="theory-equation">P' = P + T</div>
-                    <h4 class="theory-matrix-heading">4×4 Matrix</h4>
-                    <div class="card-matrix-grid" id="theory-matrix-display"></div>
-                </div>
-            </div>
-            <!-- Right: Animation -->
-            <div class="theory-animation">
-                <canvas class="theory-preview" id="theory-preview-canvas"></canvas>
-            </div>
+      <div class="theory-layout">
+        <!-- Left: Selector buttons -->
+        <div class="theory-selector">
+          <h2 class="section-heading">Theory</h2>
+          <button class="theory-option active" data-type="translation">
+            <span class="opt-icon">↗</span>
+            <span class="opt-label">Translation</span>
+            <span class="opt-teaser">Move objects through 3D space</span>
+          </button>
+          <button class="theory-option" data-type="rotation">
+            <span class="opt-icon">⟳</span>
+            <span class="opt-label">Rotation</span>
+            <span class="opt-teaser">Pivot objects around any axis</span>
+          </button>
+          <button class="theory-option" data-type="scaling">
+            <span class="opt-icon">⤢</span>
+            <span class="opt-label">Scaling</span>
+            <span class="opt-teaser">Resize objects along each axis</span>
+          </button>
         </div>
+        <!-- Middle: Content display -->
+        <div class="theory-content" id="theory-content">
+          <div class="theory-content-inner" id="theory-content-inner">
+            <h3 id="theory-title">Translation</h3>
+            <p id="theory-desc">
+              Translation moves an object in 3D space along the X, Y, or Z axes
+              without altering its rotation or size.
+            </p>
+            <div class="card-equation" id="theory-equation">P' = P + T</div>
+            <h4 class="theory-matrix-heading">4×4 Matrix</h4>
+            <div class="card-matrix-grid" id="theory-matrix-display"></div>
+          </div>
+        </div>
+        <!-- Right: Animation -->
+        <div class="theory-animation">
+          <canvas class="theory-preview" id="theory-preview-canvas"></canvas>
+        </div>
+      </div>
     </section>
 
     <!-- ======================== PLAYGROUND + MATRIX SIDE BY SIDE ======================== -->
     <div class="playground-matrices-wrapper">
-
-    <section id="playground" class="section section-playground side-section">
+      <section id="playground" class="section section-playground side-section">
         <h2 class="section-heading">Playground</h2>
 
         <!-- Game HUD -->
         <div class="game-hud">
-            <div class="hud-level" id="hud-level">LEVEL 01 / 04</div>
-            <div class="hud-stats">
-                <div class="hud-score">SCORE: <span id="hud-score-val">0</span></div>
-                <div class="hud-streak">STREAK: <span id="hud-streak-val">0</span></div>
+          <div class="hud-level" id="hud-level">LEVEL 01 / 04</div>
+          <div class="hud-stats">
+            <div class="hud-score">
+              SCORE: <span id="hud-score-val">0</span>
             </div>
-            <div class="hud-controls">
-                <select id="level-select">
-                    <option value="1">Level 1: Translation Only</option>
-                    <option value="2">Level 2: Translation &amp; Scaling</option>
-                    <option value="3">Level 3: Rotation Only</option>
-                    <option value="4">Level 4: Full Composite</option>
-                </select>
-                <button id="btn-toggle-axes" class="hud-btn">Show Axes</button>
+            <div class="hud-streak">
+              STREAK: <span id="hud-streak-val">0</span>
             </div>
+          </div>
+          <div class="hud-controls">
+            <select id="level-select">
+              <option value="1">Level 1: Translation Only</option>
+              <option value="2">Level 2: Translation &amp; Scaling</option>
+              <option value="3">Level 3: Rotation Only</option>
+              <option value="4">Level 4: Full Composite</option>
+            </select>
+            <button id="btn-toggle-axes" class="hud-btn">Show Axes</button>
+          </div>
         </div>
 
         <div class="playground-layout">
-            <!-- 3D Viewport -->
-            <div class="viewport-wrapper">
-                <div class="main-viewport" id="viewport-container">
-                    <div id="coords-overlay" class="coords-overlay">
-                        X: <span id="coord-x">0.0</span> | Y: <span id="coord-y">0.0</span> | Z: <span id="coord-z">0.0</span>
-                    </div>
-                    <button id="btn-reset" class="reset-btn">Reset</button>
-                    <!-- Three.js Canvas will be injected here -->
-                    <div id="win-overlay" class="win-overlay hidden">
-                        <div class="win-content">
-                            <div class="win-stamp">MATCHED</div>
-                            <p>Level completed!</p>
-                        </div>
-                    </div>
-                    <canvas id="particle-canvas" class="particle-canvas"></canvas>
+          <!-- 3D Viewport -->
+          <div class="viewport-wrapper">
+            <div class="main-viewport" id="viewport-container">
+              <div id="coords-overlay" class="coords-overlay">
+                X: <span id="coord-x">0.0</span> | Y:
+                <span id="coord-y">0.0</span> | Z: <span id="coord-z">0.0</span>
+              </div>
+              <button id="btn-reset" class="reset-btn">Reset</button>
+              <!-- Three.js Canvas will be injected here -->
+              <div id="win-overlay" class="win-overlay hidden">
+                <div class="win-content">
+                  <div class="win-stamp">MATCHED</div>
+                  <p>Level completed!</p>
                 </div>
+              </div>
+              <canvas id="particle-canvas" class="particle-canvas"></canvas>
+            </div>
+          </div>
+
+          <!-- Controls Panel -->
+          <div class="controls-panel">
+            <div class="control-group" id="group-translation">
+              <h4>Translation</h4>
+              <div class="slider-row">
+                <label for="tx">TX</label>
+                <input
+                  type="range"
+                  id="tx"
+                  min="-5"
+                  max="5"
+                  step="0.1"
+                  value="0"
+                />
+                <div class="slider-value"><span id="val-tx">0.0</span></div>
+              </div>
+              <div class="slider-row">
+                <label for="ty">TY</label>
+                <input
+                  type="range"
+                  id="ty"
+                  min="-5"
+                  max="5"
+                  step="0.1"
+                  value="0"
+                />
+                <div class="slider-value"><span id="val-ty">0.0</span></div>
+              </div>
+              <div class="slider-row">
+                <label for="tz">TZ</label>
+                <input
+                  type="range"
+                  id="tz"
+                  min="-5"
+                  max="5"
+                  step="0.1"
+                  value="0"
+                />
+                <div class="slider-value"><span id="val-tz">0.0</span></div>
+              </div>
             </div>
 
-            <!-- Controls Panel -->
-            <div class="controls-panel">
-                <div class="control-group" id="group-translation">
-                    <h4>Translation</h4>
-                    <div class="slider-row">
-                        <label for="tx">TX</label>
-                        <input type="range" id="tx" min="-5" max="5" step="0.1" value="0">
-                        <div class="slider-value"><span id="val-tx">0.0</span></div>
-                    </div>
-                    <div class="slider-row">
-                        <label for="ty">TY</label>
-                        <input type="range" id="ty" min="-5" max="5" step="0.1" value="0">
-                        <div class="slider-value"><span id="val-ty">0.0</span></div>
-                    </div>
-                    <div class="slider-row">
-                        <label for="tz">TZ</label>
-                        <input type="range" id="tz" min="-5" max="5" step="0.1" value="0">
-                        <div class="slider-value"><span id="val-tz">0.0</span></div>
-                    </div>
-                </div>
-
-                <div class="control-group" id="group-rotation">
-                    <h4>Rotation</h4>
-                    <div class="slider-row">
-                        <label for="rx">RX</label>
-                        <input type="range" id="rx" min="0" max="360" step="1" value="0">
-                        <div class="slider-value"><span id="val-rx">0</span>°</div>
-                    </div>
-                    <div class="slider-row">
-                        <label for="ry">RY</label>
-                        <input type="range" id="ry" min="0" max="360" step="1" value="0">
-                        <div class="slider-value"><span id="val-ry">0</span>°</div>
-                    </div>
-                    <div class="slider-row">
-                        <label for="rz">RZ</label>
-                        <input type="range" id="rz" min="0" max="360" step="1" value="0">
-                        <div class="slider-value"><span id="val-rz">0</span>°</div>
-                    </div>
-                </div>
-
-                <div class="control-group" id="group-scaling">
-                    <h4>Scaling</h4>
-                    <div class="slider-row">
-                        <label for="sx">SX</label>
-                        <input type="range" id="sx" min="0.1" max="3" step="0.1" value="1">
-                        <div class="slider-value"><span id="val-sx">1.0</span></div>
-                    </div>
-                    <div class="slider-row">
-                        <label for="sy">SY</label>
-                        <input type="range" id="sy" min="0.1" max="3" step="0.1" value="1">
-                        <div class="slider-value"><span id="val-sy">1.0</span></div>
-                    </div>
-                    <div class="slider-row">
-                        <label for="sz">SZ</label>
-                        <input type="range" id="sz" min="0.1" max="3" step="0.1" value="1">
-                        <div class="slider-value"><span id="val-sz">1.0</span></div>
-                    </div>
-                </div>
+            <div class="control-group" id="group-rotation">
+              <h4>Rotation</h4>
+              <div class="slider-row">
+                <label for="rx">RX</label>
+                <input
+                  type="range"
+                  id="rx"
+                  min="0"
+                  max="360"
+                  step="1"
+                  value="0"
+                />
+                <div class="slider-value"><span id="val-rx">0</span>°</div>
+              </div>
+              <div class="slider-row">
+                <label for="ry">RY</label>
+                <input
+                  type="range"
+                  id="ry"
+                  min="0"
+                  max="360"
+                  step="1"
+                  value="0"
+                />
+                <div class="slider-value"><span id="val-ry">0</span>°</div>
+              </div>
+              <div class="slider-row">
+                <label for="rz">RZ</label>
+                <input
+                  type="range"
+                  id="rz"
+                  min="0"
+                  max="360"
+                  step="1"
+                  value="0"
+                />
+                <div class="slider-value"><span id="val-rz">0</span>°</div>
+              </div>
             </div>
+
+            <div class="control-group" id="group-scaling">
+              <h4>Scaling</h4>
+              <div class="slider-row">
+                <label for="sx">SX</label>
+                <input
+                  type="range"
+                  id="sx"
+                  min="0.1"
+                  max="3"
+                  step="0.1"
+                  value="1"
+                />
+                <div class="slider-value"><span id="val-sx">1.0</span></div>
+              </div>
+              <div class="slider-row">
+                <label for="sy">SY</label>
+                <input
+                  type="range"
+                  id="sy"
+                  min="0.1"
+                  max="3"
+                  step="0.1"
+                  value="1"
+                />
+                <div class="slider-value"><span id="val-sy">1.0</span></div>
+              </div>
+              <div class="slider-row">
+                <label for="sz">SZ</label>
+                <input
+                  type="range"
+                  id="sz"
+                  min="0.1"
+                  max="3"
+                  step="0.1"
+                  value="1"
+                />
+                <div class="slider-value"><span id="val-sz">1.0</span></div>
+              </div>
+            </div>
+          </div>
         </div>
-    </section>
+      </section>
 
-    <section id="matrix-math" class="section section-matrices side-section">
+      <section id="matrix-math" class="section section-matrices side-section">
         <h2 class="section-heading">Matrix Math</h2>
         <div class="matrix-grid-layout">
-            <div class="matrix-box" id="box-initial">
-                <h4 class="matrix-label">Initial State</h4>
-                <div class="dynamic-eq"><code>P = Initial Point</code></div>
-                <div class="matrix-cells" id="matrix-initial"></div>
+          <div class="matrix-box" id="box-initial">
+            <h4 class="matrix-label">Initial State</h4>
+            <div class="dynamic-eq"><code>P = Initial Point</code></div>
+            <div class="matrix-cells" id="matrix-initial"></div>
+          </div>
+          <div class="matrix-box" id="box-target">
+            <h4 class="matrix-label">Target State</h4>
+            <div class="dynamic-eq"><code>P' = Target Point</code></div>
+            <div class="matrix-cells" id="matrix-target"></div>
+          </div>
+          <div class="matrix-box" id="box-t">
+            <h4 class="matrix-label">T Matrix</h4>
+            <div class="dynamic-eq" id="eq-t"><code>T = (0, 0, 0)</code></div>
+            <div class="matrix-cells" id="matrix-t"></div>
+          </div>
+          <div class="matrix-box" id="box-r">
+            <h4 class="matrix-label">R Matrix</h4>
+            <div class="dynamic-eq" id="eq-r">
+              <code>R = (0°, 0°, 0°)</code>
             </div>
-            <div class="matrix-box" id="box-target">
-                <h4 class="matrix-label">Target State</h4>
-                <div class="dynamic-eq"><code>P' = Target Point</code></div>
-                <div class="matrix-cells" id="matrix-target"></div>
-            </div>
-            <div class="matrix-box" id="box-t">
-                <h4 class="matrix-label">T Matrix</h4>
-                <div class="dynamic-eq" id="eq-t"><code>T = (0, 0, 0)</code></div>
-                <div class="matrix-cells" id="matrix-t"></div>
-            </div>
-            <div class="matrix-box" id="box-r">
-                <h4 class="matrix-label">R Matrix</h4>
-                <div class="dynamic-eq" id="eq-r"><code>R = (0°, 0°, 0°)</code></div>
-                <div class="matrix-cells" id="matrix-r"></div>
-            </div>
-            <div class="matrix-box" id="box-s">
-                <h4 class="matrix-label">S Matrix</h4>
-                <div class="dynamic-eq" id="eq-s"><code>S = (1, 1, 1)</code></div>
-                <div class="matrix-cells" id="matrix-s"></div>
-            </div>
-            <div class="matrix-box matrix-composite" id="box-composite">
-                <h4 class="matrix-label">Composite (T × R × S)</h4>
-                <div class="dynamic-eq"><code>P' = T × R × S × P</code></div>
-                <div class="matrix-cells" id="matrix-composite"></div>
-            </div>
+            <div class="matrix-cells" id="matrix-r"></div>
+          </div>
+          <div class="matrix-box" id="box-s">
+            <h4 class="matrix-label">S Matrix</h4>
+            <div class="dynamic-eq" id="eq-s"><code>S = (1, 1, 1)</code></div>
+            <div class="matrix-cells" id="matrix-s"></div>
+          </div>
+          <div class="matrix-box matrix-composite" id="box-composite">
+            <h4 class="matrix-label">Composite (T × R × S)</h4>
+            <div class="dynamic-eq"><code>P' = T × R × S × P</code></div>
+            <div class="matrix-cells" id="matrix-composite"></div>
+          </div>
         </div>
-    </section>
-
+      </section>
     </div>
-
 
     <!-- Application Script -->
     <script type="module" src="script.js"></script>
-</body>
+  </body>
 </html>
